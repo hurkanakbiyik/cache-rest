@@ -36,7 +36,7 @@ CacheSchema.method({
 CacheSchema.statics = {
   /**
    * Get cache
-   * @param {ObjectId} id - The objectId of cache and it is the KEY.
+   * @param {ObjectId} id - The objectId of cache
    * @returns {Promise<User, APIError>}
    */
   get(id) {
@@ -53,15 +53,11 @@ CacheSchema.statics = {
 
   /**
    * List caches in descending order of 'createdAt' timestamp.
-   * @param {number} skip - Number of caches to be skipped.
-   * @param {number} limit - Limit number of users to be returned.
    * @returns {Promise<Cache[]>}
    */
-  list({ skip = 0, limit = 50 } = {}) {
+  list() {
     return this.find()
       .sort({ createdAt: -1 })
-      .skip(+skip)
-      .limit(+limit)
       .exec();
   }
 };
