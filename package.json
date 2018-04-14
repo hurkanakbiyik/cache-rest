@@ -58,7 +58,9 @@
     "method-override": "^2.3.5",
     "mongoose": "4.7.4",
     "morgan": "1.7.0",
-    "winston": "2.3.0"
+    "winston": "2.3.0",
+    "node-cache": "^4.2.0",
+    "faker": "^4.1.0"
   },
   "devDependencies": {
     "babel-cli": "6.18.0",
@@ -90,8 +92,7 @@
     "run-sequence": "^1.1.5",
     "supertest": "2.0.1",
     "supertest-as-promised": "4.0.2",
-    "validate-commit-msg": "^2.6.1",
-    "faker": "^4.1.0"
+    "validate-commit-msg": "^2.6.1"
   },
   "license": "MIT",
   "config": {

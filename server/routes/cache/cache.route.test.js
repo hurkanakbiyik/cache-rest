@@ -30,7 +30,7 @@ if (config.mongo.open === true) {
     };
 
     describe('# POST /api/caches', () => {
-      it.skip('should create a new data for cache', (done) => {
+      it('should create a new data for cache', (done) => {
         request(app)
           .post('/api/caches')
           .send(cache)
@@ -39,7 +39,7 @@ if (config.mongo.open === true) {
             expect(res.body.key).to.be.a('string');
             expect(res.body.data.name).to.equal(cache.data.name);
             expect(res.body.data.email).to.equal(cache.data.email);
-            expect(res.body.data.card).to.equal(cache.data.card);
+            expect(res.body.data.card.account).to.equal(cache.data.card.account);
             cache = res.body;
             done();
           })
@@ -48,7 +48,7 @@ if (config.mongo.open === true) {
     });
 
     describe('# GET /api/caches/:key', () => {
-      it.skip('should get cache details', (done) => {
+      it('should get cache details', (done) => {
         request(app)
           .get(`/api/caches/${cache.key}`)
           .expect(httpStatus.OK)
@@ -56,18 +56,19 @@ if (config.mongo.open === true) {
             expect(res.body.key).to.be.a('string');
             expect(res.body.data.name).to.equal(cache.data.name);
             expect(res.body.data.email).to.equal(cache.data.email);
-            expect(res.body.data.card).to.equal(cache.data.card);
+            expect(res.body.data.card.account).to.equal(cache.data.card.account);
             done();
           })
           .catch(done);
       });
 
-      it.skip('should create a new key - If the key is found in the caches', (done) => {
+      it('should create a new key - If the key is not found in the caches', (done) => {
         request(app)
           .get('/api/caches/56c787ccc67fc16ccc1a5e92')
           .expect(httpStatus.OK)
           .then((res) => {
-            expect(res.body).to.be.a('string');
+            expect(res.body.data).to.be.a('string');
+            expect(res.body.key).to.be.a('string');
             done();
           })
           .catch(done);
@@ -75,7 +76,7 @@ if (config.mongo.open === true) {
     });
 
     describe('# PUT /api/caches/:key', () => {
-      it.skip('should update cache details', (done) => {
+      it('should update cache details', (done) => {
         cache.data = {
           name: faker.name.findName(),
           email: faker.internet.email(),
@@ -89,7 +90,6 @@ if (config.mongo.open === true) {
             expect(res.body.key).to.be.a('string');
             expect(res.body.data.name).to.equal(cache.data.name);
             expect(res.body.data.email).to.equal(cache.data.email);
-            expect(res.body.data.card).to.equal(cache.data.card);
             done();
           })
           .catch(done);
@@ -97,7 +97,7 @@ if (config.mongo.open === true) {
     });
 
     describe('# GET /api/caches/', () => {
-      it.skip('should returns all stored keys in the cache', (done) => {
+      it('should returns all stored keys in the cache', (done) => {
         request(app)
           .get('/api/caches')
           .expect(httpStatus.OK)
@@ -111,7 +111,7 @@ if (config.mongo.open === true) {
     });
 
     describe('# DELETE /api/caches/', () => {
-      it.skip('should delete cache', (done) => {
+      it('should delete cache', (done) => {
         request(app)
           .delete(`/api/caches/${cache.key}`)
           .expect(httpStatus.OK)
@@ -120,26 +120,35 @@ if (config.mongo.open === true) {
           })
           .catch(done);
       });
-      it.skip('should create a new key - If the key is found in the caches', (done) => {
+      it('should create a new key - If the key is found in the caches', (done) => {
         request(app)
           .get(`/api/caches/${cache.key}`)
           .expect(httpStatus.OK)
           .then((res) => {
-            expect(res.body).to.be.a('string');
+            expect(res.body.data).to.be.a('string');
+            expect(res.body.key).to.be.a('string');
             done();
           })
           .catch(done);
       });
     });
-    const bulkDeleteList = ['1','2','3'];
+    const bulkDeleteList = ['1', '2', '3'];
 
     describe('# DELETE /api/caches/bulk', () => {
-      it.skip('should delete cache', (done) => {
+      it('should delete cache', (done) => {
         request(app)
-          .delete(`/api/caches/bulk/${bulkDeleteList.join(',')}`)
+          .post('/api/caches')
+          .send(cache)
           .expect(httpStatus.OK)
-          .then(() => {
-            done();
+          .then((res) => {
+            bulkDeleteList.push(res.body.key);
+            request(app)
+              .delete(`/api/caches/bulk/${bulkDeleteList.join(',')}`)
+              .expect(httpStatus.OK)
+              .then(() => {
+                done();
+              })
+              .catch(done);
           })
           .catch(done);
       });

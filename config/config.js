@@ -29,7 +29,9 @@ const envVarsSchema = Joi.object({
   MONGO_PORT: Joi.number()
     .default(27017),
   MONGO_OPEN: Joi.boolean()
-    .default(true)
+    .default(true),
+  TTL: Joi.number()
+    .default(60 * 60 * 1000)
 })
   .unknown()
   .required();
@@ -49,15 +51,8 @@ const config = {
     port: envVars.MONGO_PORT,
     open: envVars.MONGO_OPEN
   },
-  soa: {
-    live: envVars.SOA_LIVE,
-    wsdl: envVars.SOA_WSDL
-  },
-  postgresql: {
-    host: envVars.DB_HOST,
-    user: envVars.DB_USER,
-    password: envVars.DB_PASSWORD,
-    database: envVars.DB_DATABASE,
+  cache: {
+    ttl: envVars.TTL
   }
 };
 
