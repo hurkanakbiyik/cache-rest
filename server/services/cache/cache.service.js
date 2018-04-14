@@ -5,8 +5,13 @@ import Cache from '../../models/cache.model';
 import config from '../../../config/config';
 import APIError from '../../helpers/APIError';
 
-
-const cacheForMongo = new NodeCache();
+/**
+ * Checkperiod will check every value if they expired it will remove cached keys.
+ * @type {NodeCache}
+ */
+const cacheForMongo = new NodeCache({
+  checkperiod: config.cache.check
+});
 
 /**
  * Load cache and append to req.

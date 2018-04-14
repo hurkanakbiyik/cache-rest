@@ -31,7 +31,9 @@ const envVarsSchema = Joi.object({
   MONGO_OPEN: Joi.boolean()
     .default(true),
   TTL: Joi.number()
-    .default(60 * 60 * 1000)
+    .default(60 * 60),
+  KEY_CHECK_PERIOD: Joi.number()
+    .default(60)
 })
   .unknown()
   .required();
@@ -52,7 +54,8 @@ const config = {
     open: envVars.MONGO_OPEN
   },
   cache: {
-    ttl: envVars.TTL
+    ttl: envVars.TTL,
+    check: envVars.KEY_CHECK_PERIOD
   }
 };
 
